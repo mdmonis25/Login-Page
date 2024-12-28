@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Login Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="overflow-hidden">
+  <div class="relative h-screen bg-cover bg-fixed bg-center" style="background-image: url('https://img.freepik.com/premium-photo/lobby-with-large-window-large-rug-floor_1262102-2903.jpg?w=1060');">
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="bg-white bg-opacity-90 p-8 rounded-xl shadow-lg w-80">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-4">Login</h1>
+        <form id="loginForm" class="space-y-4">
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="Username" 
+            class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none" 
+            required
+          >
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="Password" 
+            class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none" 
+            required
+          >
+          <button 
+            type="submit" 
+            class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+          >
+            Login
+          </button>
+          <div id="error" class="text-red-500 text-sm mt-2 hidden"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorElement = document.getElementById('error');
+
+      errorElement.classList.add('hidden');
+
+      const token = btoa(`${username}:${password}`);
+
+      const createFormData = (data) => {
+        const formData = new FormData();
+        Object.keys(data).forEach((key) => {
+          formData.append(key, data[key]);
+        });
+        return formData;
+      };
+
+      try {
+        const loginPayload = createFormData({
+          route: "login",
+          token: token
+        });
+
+        const response = await fetch("https://demo.hotelraja.co.in/api/auth.php", {
+          method: "POST",
+          body: loginPayload
+        });
+
+        const result = await response.json();
+
+        if (result.result === 1) {
+          const sessionToken = result.token;
+          localStorage.setItem("sessionToken", sessionToken);
+          // alert("Login successful!");
+          window.location.href = "https://mdmonis25.github.io/Hotel-Raja-/homepage-modern.html"; // Redirect to homepage
+        } else {
+          errorElement.textContent = result.message || "Invalid credentials";
+          errorElement.classList.remove('hidden');
+        }
+      } catch (error) {
+        errorElement.textContent = "An error occurred while logging in. Please try again.";
+        errorElement.classList.remove('hidden');
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
