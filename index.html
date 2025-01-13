@@ -78,7 +78,8 @@
           const sessionToken = result.token;
           localStorage.setItem("sessionToken", sessionToken);
           // alert("Login successful!");
-          window.location.href = "https://mdmonis25.github.io/Hotel-Raja-/homepage-modern.html"; // Redirect to homepage
+          window.location.href = "https://mdmonis25.github.io/Hotel-Raja-/homepage-modern.html"; 
+          // Redirect to homepage
         } else {
           errorElement.textContent = result.message || "Invalid credentials";
           errorElement.classList.remove('hidden');
